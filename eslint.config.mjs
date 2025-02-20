@@ -43,7 +43,7 @@ const typescriptRules = {
         allowDirectConstAssertionInArrowFunctions           : true,
     }],
     '@typescript-eslint/naming-convention'           : 0,
-    '@typescript-eslint/no-explicit-any'             : 2,
+    '@typescript-eslint/no-explicit-any'             : 0,
     '@typescript-eslint/no-extraneous-class'         : [2, {allowWithDecorator: true}],
     '@typescript-eslint/no-non-null-assertion'       : 1,
     'no-use-before-define'                           : 0,

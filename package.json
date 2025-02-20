@@ -22,11 +22,16 @@
     "homepage": "https://github.com/jhayashi1/exercise-tracker-backend#readme",
     "devDependencies": {
         "@aws-sdk/types": "3.649.0",
+        "@types/aws-lambda": "^8.10.147",
         "@types/node": "22.5.5",
         "@typescript-eslint/eslint-plugin": "^8.6.0",
+        "archiver": "^7.0.1",
         "esbuild": "0.23.1",
         "eslint": "9.10.0",
         "tsx": "4.19.2",
         "typescript": "5.7.3"
+    },
+    "dependencies": {
+        "tsoa": "^6.6.0"
     }
 }

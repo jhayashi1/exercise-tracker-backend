@@ -1,9 +1,13 @@
 import {build} from 'esbuild';
-import {execSync} from 'node:child_process';
-import 'dotenv/config';
+import {readdirSync, createWriteStream, cpSync, rmSync} from 'fs';
+import {join} from 'path';
+import archiver from 'archiver';
+
+const endpointNames = readdirSync('src').filter((name) => name.split('.').length < 2);
+const endpointDirectories = endpointNames.map((name) => `src/${name}/index.ts`);
 
 build({
-    entryPoints: ['src/index.ts'],
+    entryPoints: endpointDirectories,
     outdir: 'dist',
     format: 'cjs',
     platform: 'node',
@@ -16,4 +20,29 @@ build({
     sourcemap: true,
     sourcesContent: false,
     logLevel: 'info',
-}).catch(() => process.exit(1));
+}).then(() => {
+    endpointNames.forEach((name) => {
+        const zipPath = join('dist', `${name}.zip`)
+        const output = createWriteStream(zipPath);
+        const archive = archiver('zip', {
+            zlib: { level: 9 }
+        });
+
+        output.on('close', () => {
+            console.log(`completed zipping ${name}`);
+            cpSync(zipPath, join('terraform', `${name}.zip`));
+        });
+
+        archive.on('error', (err) => {
+            throw err;
+        });
+
+        archive.pipe(output);
+        archive.directory(join('dist', name), false);
+        archive.finalize();
+    });
+}).then(() => rmSync('dist', {recursive: true})
+).catch((e) => {
+    console.error(e);
+    process.exit(1)
+});

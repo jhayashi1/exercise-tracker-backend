@@ -1,7 +1,3 @@
-data "aws_route53_zone" "main_zone" {
-  name = "jaredhayashi.com"
-}
-
 resource "aws_acm_certificate" "api_cert" {
   domain_name       = "api.jaredhayashi.com"
   validation_method = "DNS"
