@@ -10,14 +10,10 @@ and run:
 pnpm install
 ```
 
-To run locally:
-```bash
-pnpm run start
-```
-
 To build:
 ```bash
 pnpm run build
 ```
 
 ## todo
+ - cognito authorization for api gateway
