@@ -4,9 +4,10 @@
     "description": "",
     "main": "index.ts",
     "packageManager": "pnpm@9.15.0",
+    "type": "module",
     "scripts": {
         "start": "npx tsx --env-file=.env.local src/index.ts",
-        "build": "node esbuild.config.mjs",
+        "build": "npx tsx scripts/build.ts",
         "lint": "eslint .",
         "types": "tsc --noEmit"
     },
@@ -26,12 +27,12 @@
         "@types/node": "22.5.5",
         "@typescript-eslint/eslint-plugin": "^8.6.0",
         "archiver": "^7.0.1",
-        "esbuild": "0.23.1",
+        "esbuild": "0.25.0",
         "eslint": "9.10.0",
         "tsx": "4.19.2",
         "typescript": "5.7.3"
     },
     "dependencies": {
-        "tsoa": "^6.6.0"
+        "joi": "^17.13.3"
     }
 }

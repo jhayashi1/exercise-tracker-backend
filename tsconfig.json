@@ -21,6 +21,8 @@
 
         "noErrorTruncation": true,
         "disableSizeLimit": true,
+        "noEmit": true,
     },
+    "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
   
