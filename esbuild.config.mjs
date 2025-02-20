@@ -1,5 +1,5 @@
 import {build} from 'esbuild';
-import {readdirSync, createWriteStream, cpSync, rmSync} from 'fs';
+import {readdirSync, createWriteStream, cpSync} from 'fs';
 import {join} from 'path';
 import archiver from 'archiver';
 
@@ -41,8 +41,7 @@ build({
         archive.directory(join('dist', name), false);
         archive.finalize();
     });
-}).then(() => rmSync('dist', {recursive: true})
-).catch((e) => {
+}).catch((e) => {
     console.error(e);
     process.exit(1)
 });
