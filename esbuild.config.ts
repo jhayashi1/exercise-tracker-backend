@@ -4,8 +4,8 @@ export default {
     format           : 'cjs',
     platform         : 'node',
     target           : 'node22.10',
-    outdir           : 'dist/lambda',
-    loader           : {'.html': 'text', '.css': 'text', '.ts': 'ts'},
+    outdir           : 'dist',
+    loader           : {'.html': 'text', '.css': 'text'},
     bundle           : true,
     minifySyntax     : true,
     minifyWhitespace : true,
@@ -14,5 +14,4 @@ export default {
     sourcemap        : true,
     sourcesContent   : false,
     logLevel         : 'info',
-    resolveExtensions: ['.ts', '.tsx', '.js'],
 } satisfies BuildOptions;

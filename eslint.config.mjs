@@ -85,6 +85,7 @@ export default [{
             webextensions: true,
             console      : true,
             __dirname    : true,
+            process      : true,
         },
     },
     rules: {
