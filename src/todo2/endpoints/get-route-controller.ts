@@ -1,13 +1,19 @@
-import {Get, Inject, OperationId, Queries, Route, Tags} from 'tsoa';
-import type {ApiEvent} from '..';
+import type {ApiEvent} from '../index';
 import {getRoute} from './get-route';
+import Joi from 'joi';
 
-@Route('route')
-export abstract class GetRouteController {
-    @Get()
-    @OperationId('getRequest')
-    @Tags('test')
-    static async handler(@Inject() e: ApiEvent, @Queries() q: unknown): Promise<unknown> {
-        return await getRoute();
-    }
+export const GetRouteController = {
+    validator: async (event: ApiEvent): Promise<[TodoBody]> => [
+        await Joi
+            .object<TodoBody>()
+            .keys({
+                yuh: Joi.string().optional(),
+            })
+            .validateAsync(JSON.parse(event.body ?? '')),
+    ],
+    handler: getRoute,
+};
+
+export interface TodoBody {
+    yuh?: string;
 }
