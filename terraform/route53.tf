@@ -24,6 +24,7 @@ resource "aws_acm_certificate_validation" "api_cert_validation" {
   certificate_arn         = aws_acm_certificate.api_cert.arn
   validation_record_fqdns = [for record in aws_route53_record.api_cert_validation_records : record.fqdn]
 }
+
 resource "aws_route53_record" "api_gateway_record" {
   name    = aws_apigatewayv2_domain_name.domain.domain_name
   type    = "A"

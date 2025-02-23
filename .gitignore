@@ -6,6 +6,7 @@ dist
 
 deploy.sh
 test.ts
+test.http
 
 *.tar.gz
 **/.terraform/*

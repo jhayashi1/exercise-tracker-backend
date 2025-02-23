@@ -9,17 +9,17 @@ resource "aws_apigatewayv2_api" "api" {
   }
 }
 
-resource "aws_apigatewayv2_authorizer" "authorizer" {
-  api_id           = aws_apigatewayv2_api.api.id
-  authorizer_type  = "JWT"
-  identity_sources = ["$request.header.Authorization"]
-  name             = "exercise-tracker-authorizer"
+# resource "aws_apigatewayv2_authorizer" "authorizer" {
+#   api_id           = aws_apigatewayv2_api.api.id
+#   authorizer_type  = "JWT"
+#   identity_sources = ["$request.header.Authorization"]
+#   name             = "exercise-tracker-authorizer"
 
-  jwt_configuration {
-    audience = ["todo"]
-    issuer   = "todo"
-  }
-}
+#   jwt_configuration {
+#     audience = ["todo"]
+#     issuer   = "todo"
+#   }
+# }
 
 resource "aws_apigatewayv2_stage" "stage" {
   api_id      = aws_apigatewayv2_api.api.id
@@ -28,7 +28,7 @@ resource "aws_apigatewayv2_stage" "stage" {
 }
 
 resource "aws_apigatewayv2_domain_name" "domain" {
-  domain_name = "api.jhayashi.com"
+  domain_name = "api.jaredhayashi.com"
 
   domain_name_configuration {
     certificate_arn = aws_acm_certificate.api_cert.arn
@@ -37,18 +37,24 @@ resource "aws_apigatewayv2_domain_name" "domain" {
   }
 }
 
+resource "aws_apigatewayv2_api_mapping" "mapping" {
+  api_id      = aws_apigatewayv2_api.api.id
+  domain_name = aws_apigatewayv2_domain_name.domain.id
+  stage       = aws_apigatewayv2_stage.stage.id
+}
+
 resource "aws_apigatewayv2_integration" "todo" {
   api_id                 = aws_apigatewayv2_api.api.id
-  integration_method     = "GET"
+  integration_method     = "POST"
   integration_type       = "AWS_PROXY"
-  integration_uri        = "invoke_arn"
+  integration_uri        = aws_lambda_function.todo.invoke_arn
   payload_format_version = "2.0"
 }
 
 resource "aws_apigatewayv2_route" "todo_route" {
-  api_id             = aws_apigatewayv2_api.api.id
-  authorization_type = "JWT"
-  authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
-  route_key          = "GET /todo/route"
-  target             = "integrations/${aws_apigatewayv2_integration.todo.id}"
+  api_id = aws_apigatewayv2_api.api.id
+  # authorization_type = "JWT"
+  # authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
+  route_key = "GET /todo/route"
+  target    = "integrations/${aws_apigatewayv2_integration.todo.id}"
 }

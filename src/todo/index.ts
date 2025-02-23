@@ -21,13 +21,15 @@ const router: Router = {
 };
 
 export const handler = async (event: ApiEvent, context: Context): Promise<string> => {
-    const method = event.requestContext.http.method;
-    const [path] = event.rawPath.split('/').reverse();
+    console.log(event);
+    console.log(context);
+    // const method = event.requestContext.http.method;
+    // const [path] = event.rawPath.split('/').reverse();
 
-    const key = event.routeKey in router
-        ? event.routeKey
-        : `${method} /${path}`;
+    // const key = event.routeKey in router
+    //     ? event.routeKey
+    //     : `${method} /${path}`;
 
-    const fnc = router[key];
+    const fnc = router['GET /route'];
     return await fnc.handler(event);
 };
