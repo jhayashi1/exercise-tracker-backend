@@ -17,19 +17,17 @@ export interface Endpoint<O, P extends unknown[]> {
 }
 export type Router = Record<string, Endpoint<any, any>>;
 const router: Router = {
-    'GET /route': GetRouteController,
+    'GET /todo': GetRouteController,
 };
 
 export const handler = async (event: ApiEvent, context: Context): Promise<string> => {
-    console.log(event);
-    console.log(context);
-    // const method = event.requestContext.http.method;
-    // const [path] = event.rawPath.split('/').reverse();
+    const method = event.requestContext.http.method;
+    const [path] = event.rawPath.split('/').reverse();
 
-    // const key = event.routeKey in router
-    //     ? event.routeKey
-    //     : `${method} /${path}`;
+    const key = event.routeKey in router
+        ? event.routeKey
+        : `${method} /${path}`;
 
-    const fnc = router['GET /route'];
+    const fnc = router[key];
     return await fnc.handler(event);
 };

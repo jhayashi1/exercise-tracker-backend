@@ -55,6 +55,6 @@ resource "aws_apigatewayv2_route" "todo_route" {
   api_id = aws_apigatewayv2_api.api.id
   # authorization_type = "JWT"
   # authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
-  route_key = "GET /todo/route"
+  route_key = "GET /todo"
   target    = "integrations/${aws_apigatewayv2_integration.todo.id}"
 }
