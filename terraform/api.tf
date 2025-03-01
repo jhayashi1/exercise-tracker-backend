@@ -9,17 +9,17 @@ resource "aws_apigatewayv2_api" "api" {
   }
 }
 
-# resource "aws_apigatewayv2_authorizer" "authorizer" {
-#   api_id           = aws_apigatewayv2_api.api.id
-#   authorizer_type  = "JWT"
-#   identity_sources = ["$request.header.Authorization"]
-#   name             = "exercise-tracker-authorizer"
+resource "aws_apigatewayv2_authorizer" "authorizer" {
+  api_id           = aws_apigatewayv2_api.api.id
+  authorizer_type  = "JWT"
+  identity_sources = ["$request.header.Authorization"]
+  name             = "exercise-tracker-authorizer"
 
-#   jwt_configuration {
-#     audience = ["todo"]
-#     issuer   = "todo"
-#   }
-# }
+  jwt_configuration {
+    audience = [aws_cognito_user_pool_client.user_pool_client.id]
+    issuer   = "https://cognito-idp.us-east-1.amazonaws.com/${aws_cognito_user_pool.user_pool.id}"
+  }
+}
 
 resource "aws_apigatewayv2_stage" "stage" {
   api_id      = aws_apigatewayv2_api.api.id
@@ -52,9 +52,9 @@ resource "aws_apigatewayv2_integration" "todo" {
 }
 
 resource "aws_apigatewayv2_route" "todo_route" {
-  api_id = aws_apigatewayv2_api.api.id
-  # authorization_type = "JWT"
-  # authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
-  route_key = "GET /todo"
-  target    = "integrations/${aws_apigatewayv2_integration.todo.id}"
+  api_id             = aws_apigatewayv2_api.api.id
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
+  route_key          = "GET /todo"
+  target             = "integrations/${aws_apigatewayv2_integration.todo.id}"
 }
