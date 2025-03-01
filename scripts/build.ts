@@ -15,7 +15,7 @@ try {
     await rm(fromRoot('dist'), {recursive: true, force: true});
 
     const endpointNames = readdirSync(fromRoot('src')).filter((name) => name.split('.').length < 2);
-    const endpointDirectories = endpointNames.map((name) => `src/${name}/index.ts`);
+    const endpointDirectories = endpointNames.map((name) => `src/${name}/index.ts`).filter((name) => !name.includes('shared'));
 
     await build({
         ...config,

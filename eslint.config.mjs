@@ -56,7 +56,7 @@ const typescriptRules = {
     '@typescript-eslint/no-unsafe-call'              : 1,
     'no-unused-expressions'                          : 0,
     '@typescript-eslint/no-unused-expressions'       : [2, {allowTernary: true}],
-    '@typescript-eslint/no-unused-vars'              : 2,
+    '@typescript-eslint/no-unused-vars'              : [2, {varsIgnorePattern: '^_', argsIgnorePattern: '^_'}],
     '@typescript-eslint/prefer-reduce-type-parameter': 0,
     '@typescript-eslint/promise-function-async'      : 2,
     'no-return-await'                                : 0,
