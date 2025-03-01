@@ -2,10 +2,15 @@ resource "aws_dynamodb_table" "exercise_sessions" {
   billing_mode = "PAY_PER_REQUEST"
   name         = "exercise-tracker-sessions"
   hash_key     = "username"
-  range_key    = "endTimestamp"
+  range_key    = "guid"
 
   attribute {
     name = "username"
+    type = "S"
+  }
+
+  attribute {
+    name = "guid"
     type = "S"
   }
 

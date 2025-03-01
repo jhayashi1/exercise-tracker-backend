@@ -33,15 +33,15 @@ resource "aws_lambda_function" "todo" {
   # }
 }
 
-resource "aws_lambda_permission" "api_can_invoke_sessions_lambda" {
+resource "aws_lambda_permission" "api_can_invoke_session_lambda" {
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.sessions.function_name
+  function_name = aws_lambda_function.session.function_name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:${aws_apigatewayv2_api.api.id}*"
 }
 
-resource "aws_lambda_function" "sessions" {
-  function_name = "exercise-tracker-sessions"
+resource "aws_lambda_function" "session" {
+  function_name = "exercise-tracker-session"
   handler       = "index.handler"
 
   memory_size = "256"
@@ -49,8 +49,8 @@ resource "aws_lambda_function" "sessions" {
   runtime     = "nodejs22.x"
   role        = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/cloudfront-kill-switch-role"
 
-  filename         = "sessions.zip"
-  source_code_hash = filebase64sha256("sessions.zip")
+  filename         = "session.zip"
+  source_code_hash = filebase64sha256("session.zip")
 
   # environment {
   #   variables = {
