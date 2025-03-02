@@ -15,14 +15,14 @@ resource "aws_dynamodb_table" "exercise_sessions" {
   }
 
   attribute {
-    name = "endTimestamp"
+    name = "stopTimestamp"
     type = "S"
   }
 
   global_secondary_index {
     name            = "username-timestamp-index"
     hash_key        = "username"
-    range_key       = "endTimestamp"
+    range_key       = "stopTimestamp"
     projection_type = "ALL"
   }
 }

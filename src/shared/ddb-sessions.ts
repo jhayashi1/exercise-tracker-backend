@@ -4,18 +4,20 @@ export interface SessionMetadata {
     username: string;
     guid: string;
     startTimestamp: string;
-    endTimestamp: string;
+    stopTimestamp?: string;
 }
 
-export const getExistingSessions = async (username: string): Promise<SessionMetadata[]> => {
+export const getActiveSession = async (username: string): Promise<SessionMetadata | undefined> => {
     const ddbResult = await queryDynamoDb({
         TableName                : 'exercise-tracker-sessions',
         KeyConditionExpression   : 'username = :username',
-        FilterExpression         : 'attribute_not_exists(endTimestamp)',
+        FilterExpression         : 'attribute_not_exists(stopTimestamp)',
         ExpressionAttributeValues: {
             ':username': username,
         },
     });
 
-    return ddbResult.Items as unknown as SessionMetadata;
+    const result = ddbResult.Items ? ddbResult.Items[0] as unknown as SessionMetadata : undefined;
+
+    return result;
 };

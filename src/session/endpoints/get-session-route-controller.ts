@@ -1,6 +1,7 @@
 import type {APIGatewayProxyEventV2WithJWTAuthorizer, Context} from 'aws-lambda';
 import {getSessionRoute} from './get-session-route';
 import Joi from 'joi';
+import type {SessionMetadata} from '../../shared/ddb-sessions';
 
 export const GetSessionRouteController = {
     validator: async (event: APIGatewayProxyEventV2WithJWTAuthorizer): Promise<[GetSessionQuery]> => [
@@ -23,5 +24,5 @@ export interface GetSessionQuery {
 }
 
 export interface GetSessionResp {
-    session: any;
+    session: SessionMetadata;
 }

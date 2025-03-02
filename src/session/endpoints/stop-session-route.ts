@@ -3,19 +3,19 @@ import {updateDynamoDb} from '../../shared/dynamo';
 import {getUserDetailsFromEvent} from '../../shared/utils';
 import type {StopSessionResp} from './stop-session-route-controller';
 import {notFound} from '@hapi/boom';
-import {getExistingSessions} from '../../shared/ddb-sessions';
+import {getActiveSession} from '../../shared/ddb-sessions';
 import {ReturnValue} from '@aws-sdk/client-dynamodb';
 
 export const stopSessionRoute = async (event: APIGatewayProxyEventV2WithJWTAuthorizer, _context: Context): Promise<StopSessionResp> => {
     const {username} = getUserDetailsFromEvent(event);
-    const existingSessions = await getExistingSessions(username);
+    const activeSession = await getActiveSession(username);
 
-    if (!existingSessions.length) {
+    if (!activeSession) {
         throw notFound('Existing session not found');
     }
 
-    const {guid, startTimestamp} = existingSessions[0];
-    const endTimestamp = new Date().toISOString();
+    const {guid, startTimestamp} = activeSession;
+    const stopTimestamp = new Date().toISOString();
 
     const params = {
         TableName: 'exercise-tracker-sessions',
@@ -23,9 +23,9 @@ export const stopSessionRoute = async (event: APIGatewayProxyEventV2WithJWTAutho
             username,
             guid,
         },
-        UpdateExpression         : 'set endTimestamp = :endTimestamp',
+        UpdateExpression         : 'set stopTimestamp = :stopTimestamp',
         ExpressionAttributeValues: {
-            ':endTimestamp': endTimestamp,
+            ':stopTimestamp': stopTimestamp,
         },
         ReturnValues: ReturnValue.ALL_NEW,
     };
@@ -37,7 +37,7 @@ export const stopSessionRoute = async (event: APIGatewayProxyEventV2WithJWTAutho
         session: {
             guid,
             startTimestamp,
-            endTimestamp,
+            stopTimestamp,
         },
     };
 };

@@ -2,6 +2,7 @@ import type {APIGatewayProxyEventV2WithJWTAuthorizer, Context} from 'aws-lambda'
 import type {GetSessionQuery, GetSessionResp} from './get-session-route-controller';
 import {queryDynamoDb} from '../../shared/dynamo';
 import {notFound} from '@hapi/boom';
+import type {SessionMetadata} from '../../shared/ddb-sessions';
 
 export const getSessionRoute = async (event: APIGatewayProxyEventV2WithJWTAuthorizer, _context: Context): Promise<GetSessionResp> => {
     const {guid, username} = event.queryStringParameters as unknown as GetSessionQuery;
@@ -17,9 +18,11 @@ export const getSessionRoute = async (event: APIGatewayProxyEventV2WithJWTAuthor
 
     const result = await queryDynamoDb(params);
 
-    if (!result) {
+    if (!result.Items?.length) {
         throw notFound();
     }
 
-    return {session: result};
+    const session = result.Items[0] as unknown as SessionMetadata;
+
+    return {session};
 };

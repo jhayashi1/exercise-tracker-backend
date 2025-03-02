@@ -4,13 +4,13 @@ import {getUserDetailsFromEvent} from '../../shared/utils';
 import {generateGuid} from '../../shared/generate-guid';
 import type {StartSessionResp} from './start-session-route-controller';
 import {conflict} from '@hapi/boom';
-import {getExistingSessions} from '../../shared/ddb-sessions';
+import {getActiveSession} from '../../shared/ddb-sessions';
 
 export const startSessionRoute = async (event: APIGatewayProxyEventV2WithJWTAuthorizer, _context: Context): Promise<StartSessionResp> => {
     const {username} = getUserDetailsFromEvent(event);
-    const existingSessions = await getExistingSessions(username);
+    const activeSession = await getActiveSession(username);
 
-    if (existingSessions.length) {
+    if (activeSession) {
         throw conflict('User has existing session');
     }
 
