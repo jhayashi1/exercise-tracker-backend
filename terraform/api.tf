@@ -43,22 +43,6 @@ resource "aws_apigatewayv2_api_mapping" "mapping" {
   stage       = aws_apigatewayv2_stage.stage.id
 }
 
-resource "aws_apigatewayv2_integration" "todo" {
-  api_id                 = aws_apigatewayv2_api.api.id
-  integration_method     = "POST"
-  integration_type       = "AWS_PROXY"
-  integration_uri        = aws_lambda_function.todo.invoke_arn
-  payload_format_version = "2.0"
-}
-
-resource "aws_apigatewayv2_route" "todo_route" {
-  api_id             = aws_apigatewayv2_api.api.id
-  authorization_type = "JWT"
-  authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
-  route_key          = "GET /todo"
-  target             = "integrations/${aws_apigatewayv2_integration.todo.id}"
-}
-
 resource "aws_apigatewayv2_integration" "session" {
   api_id                 = aws_apigatewayv2_api.api.id
   integration_method     = "POST"
