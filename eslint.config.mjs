@@ -16,7 +16,7 @@ const commonRules = {
     'key-spacing'         : [2, {align: 'colon'}],
     'no-multi-spaces'     : [2, {exceptions: {Property: true, TSPropertySignature: true}}],
     'no-trailing-spaces'  : 2,
-    'no-unused-vars'      : [2, {varsIgnorePattern: '^_', argsIgnorePattern: '^_'}],
+    'no-unused-vars'      : 0,
     'object-curly-newline': [2, {
         ObjectExpression: {
             multiline: true, minProperties: 0, consistent: true,
