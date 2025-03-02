@@ -67,6 +67,14 @@ resource "aws_apigatewayv2_route" "session_list" {
   target             = "integrations/${aws_apigatewayv2_integration.session.id}"
 }
 
+resource "aws_apigatewayv2_route" "session_overview" {
+  api_id             = aws_apigatewayv2_api.api.id
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
+  route_key          = "GET /session/overview"
+  target             = "integrations/${aws_apigatewayv2_integration.session.id}"
+}
+
 resource "aws_apigatewayv2_route" "session_start" {
   api_id             = aws_apigatewayv2_api.api.id
   authorization_type = "JWT"

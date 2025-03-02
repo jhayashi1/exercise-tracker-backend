@@ -4,12 +4,14 @@ import {apiGatewayHandler} from '../shared/api-gateway-handler';
 import {StartSessionRouteController} from './endpoints/start-session-route-controller';
 import {StopSessionRouteController} from './endpoints/stop-session-route-controller';
 import {ListSessionsRouteController} from './endpoints/list-sessions-route-controller';
+import {GetSessionsOverviewRouteController} from './endpoints/get-sessions-overview-route-controller';
 
 const router: Router = {
-    'GET /session'       : GetSessionRouteController,
-    'GET /session/list'  : ListSessionsRouteController,
-    'POST /session/start': StartSessionRouteController,
-    'POST /session/end'  : StopSessionRouteController,
+    'GET /session'         : GetSessionRouteController,
+    'GET /session/list'    : ListSessionsRouteController,
+    'GET /session/overview': GetSessionsOverviewRouteController,
+    'POST /session/start'  : StartSessionRouteController,
+    'POST /session/end'    : StopSessionRouteController,
 };
 
 export const handler = apiGatewayHandler({router});

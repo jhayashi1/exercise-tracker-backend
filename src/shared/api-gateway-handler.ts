@@ -23,11 +23,13 @@ export const apiGatewayHandler = (init: ApiGatewayInit): LambdaFunction<ApiResul
             const method = event.requestContext.http.method;
             const [path] = event.rawPath.split('/').reverse();
 
+
             const key = event.routeKey in router
                 ? event.routeKey
                 : `${method} /${path}`;
-
             const fnc = router[key];
+
+            console.log(`request mapped to: ${key}`);
 
             if (fnc.validator) {
                 await fnc.validator(event);

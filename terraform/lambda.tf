@@ -17,11 +17,11 @@ resource "aws_lambda_function" "session" {
   filename         = "session.zip"
   source_code_hash = filebase64sha256("session.zip")
 
-  # environment {
-  #   variables = {
-
-  #   }
-  # }
+  environment {
+    variables = {
+      COGNITO_POOL_ID = aws_cognito_user_pool.user_pool.id
+    }
+  }
 
   # tracing_config {
   #   mode = "Active"
