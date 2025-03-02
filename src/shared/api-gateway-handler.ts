@@ -1,9 +1,9 @@
-import type {APIGatewayProxyEventV2, Context} from 'aws-lambda';
+import type {APIGatewayProxyEventV2WithJWTAuthorizer, Context} from 'aws-lambda';
 import type {ApiLambdaError, ApiResult, Router} from './endpoint-types';
 import type {Boom} from '@hapi/boom';
 import {badImplementation, badRequest, clientTimeout} from '@hapi/boom';
 
-export type LambdaFunction<R = void> = (event: APIGatewayProxyEventV2, context: Context) => Promise<R>;
+export type LambdaFunction<R = void> = (event: APIGatewayProxyEventV2WithJWTAuthorizer, context: Context) => Promise<R>;
 export interface ApiGatewayInit {
     router: Router
 }
@@ -17,6 +17,7 @@ export const boomApiError = (error: ApiLambdaError): Boom => (
 
 export const apiGatewayHandler = (init: ApiGatewayInit): LambdaFunction<ApiResult> => {
     const {router} = init;
+
     return async (event, context) => {
         try {
             const method = event.requestContext.http.method;
@@ -34,6 +35,8 @@ export const apiGatewayHandler = (init: ApiGatewayInit): LambdaFunction<ApiResul
 
             return await fnc.handler(event, context);
         } catch (error) {
+            console.error(`Error encountered during runtime ${error}`);
+
             const boomError = boomApiError(error as ApiLambdaError);
             const {statusCode, ...restBoomOutput} = boomError.output.payload;
 

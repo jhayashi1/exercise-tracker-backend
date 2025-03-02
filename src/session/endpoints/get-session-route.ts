@@ -1,9 +1,9 @@
-import type {APIGatewayProxyEventV2, Context} from 'aws-lambda';
+import type {APIGatewayProxyEventV2WithJWTAuthorizer, Context} from 'aws-lambda';
 import type {GetSessionQuery, GetSessionResp} from './get-session-route-controller';
 import {queryDynamoDb} from '../../shared/dynamo';
 import {notFound} from '@hapi/boom';
 
-export const getSessionRoute = async (event: APIGatewayProxyEventV2, _context: Context): Promise<GetSessionResp> => {
+export const getSessionRoute = async (event: APIGatewayProxyEventV2WithJWTAuthorizer, _context: Context): Promise<GetSessionResp> => {
     const {guid, username} = event.queryStringParameters as unknown as GetSessionQuery;
 
     const params = {

@@ -1,9 +1,9 @@
-import type {APIGatewayProxyEventV2, Context} from 'aws-lambda';
+import type {APIGatewayProxyEventV2WithJWTAuthorizer, Context} from 'aws-lambda';
 import {getSessionRoute} from './get-session-route';
 import Joi from 'joi';
 
 export const GetSessionRouteController = {
-    validator: async (event: APIGatewayProxyEventV2): Promise<[GetSessionQuery]> => [
+    validator: async (event: APIGatewayProxyEventV2WithJWTAuthorizer): Promise<[GetSessionQuery]> => [
         await Joi
             .object<GetSessionQuery>()
             .keys({
@@ -12,7 +12,7 @@ export const GetSessionRouteController = {
             })
             .validateAsync(event.queryStringParameters),
     ],
-    handler: async (event: APIGatewayProxyEventV2, context: Context): Promise<GetSessionResp> => {
+    handler: async (event: APIGatewayProxyEventV2WithJWTAuthorizer, context: Context): Promise<GetSessionResp> => {
         return await getSessionRoute(event, context);
     },
 };
