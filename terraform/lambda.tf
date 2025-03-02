@@ -1,10 +1,3 @@
-resource "aws_lambda_permission" "api_can_invoke_lambda" {
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.todo.function_name
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:us-east-1:${data.aws_caller_identity.current.account_id}:${aws_apigatewayv2_api.api.id}*"
-}
-
 resource "aws_lambda_permission" "api_can_invoke_session_lambda" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.session.function_name
