@@ -53,6 +53,7 @@ jobs:
           name: lambda-zips
           path: terraform/*.zip
   terraform-plan:
+    needs: build
     runs-on: ubuntu-latest
     container: hashicorp/terraform:1.9.3 
     steps:
