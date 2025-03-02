@@ -32,8 +32,6 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
           role-session-name: exercise-tracker-deploy
           aws-region: ${{ env.AWS_REGION }}
-      - name: login to ecr
-        uses: aws-actions/amazon-ecr-login@v2
       - name: pnpm setup
         uses: pnpm/action-setup@v4
       - name: node setup
@@ -49,6 +47,11 @@ jobs:
     #     run:  pnpm run lint
       - name: build
         run: pnpm run build
+      - name: upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: lambda-zips
+          path: terraform/*.zip
   terraform-plan:
     runs-on: ubuntu-latest
     container: hashicorp/terraform:1.9.3 
@@ -61,6 +64,11 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_NUMBER }}:role/${{ secrets.AWS_DEPLOY_ROLE }}
           role-session-name: exercise-tracker-deploy
           aws-region: ${{ env.AWS_REGION }}
+      - name: download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: lambda-zips
+          path: terraform
       - name: terraform plan
         run: |
           cd terraform

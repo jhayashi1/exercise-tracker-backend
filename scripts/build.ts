@@ -14,8 +14,8 @@ const fromRoot = (path: string): string => resolve(root, path);
 try {
     await rm(fromRoot('dist'), {recursive: true, force: true});
 
-    const endpointNames = readdirSync(fromRoot('src')).filter((name) => name.split('.').length < 2);
-    const endpointDirectories = endpointNames.map((name) => `src/${name}/index.ts`).filter((name) => !name.includes('shared'));
+    const endpointNames = readdirSync(fromRoot('src')).filter((name) => name.split('.').length < 2).filter((name) => !name.includes('shared'));
+    const endpointDirectories = endpointNames.map((name) => `src/${name}/index.ts`);
 
     await build({
         ...config,
@@ -25,10 +25,11 @@ try {
     for (const name of endpointNames) {
         const zip = new JSZip();
         const zipPath = join('terraform', `${name}.zip`);
-        const files = readdirSync(fromRoot(`dist/${name}`));
+        const dir = endpointNames.length === 1 ? 'dist' : `dist/${name}`;
+        const files = readdirSync(fromRoot(dir));
 
         files.forEach((file) => {
-            const path = join(fromRoot(`dist/${name}`), file);
+            const path = join(fromRoot(dir), file);
             const fileContent = readFileSync(path);
             zip.file(file, fileContent);
         });
