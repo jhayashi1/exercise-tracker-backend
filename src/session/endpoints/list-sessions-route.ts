@@ -28,7 +28,7 @@ export const listSessionsRoute = async (event: APIGatewayProxyEventV2WithJWTAuth
 
     const sessions = result.Items ? result.Items as unknown as SessionMetadata[] : [];
 
-    if (activeSession) {
+    if (activeSession && !sessions.includes(activeSession)) {
         sessions.unshift(activeSession);
     }
 
