@@ -48,7 +48,7 @@ jobs:
       - name: build
         run: pnpm run build
       - name: upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lambda-zips
           path: terraform/*.zip
@@ -66,7 +66,7 @@ jobs:
           role-session-name: exercise-tracker-deploy
           aws-region: ${{ env.AWS_REGION }}
       - name: download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: lambda-zips
           path: terraform
