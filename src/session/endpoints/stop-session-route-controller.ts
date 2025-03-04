@@ -12,6 +12,6 @@ export interface StopSessionResp {
     session: {
         guid: string;
         startTimestamp: string;
-        endTimestamp: string;
+        stopTimestamp: string;
     };
 }

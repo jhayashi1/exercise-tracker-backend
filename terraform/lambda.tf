@@ -32,3 +32,31 @@ resource "aws_lambda_function" "session" {
   #   subnet_ids = []
   # }
 }
+
+resource "aws_lambda_function" "friend" {
+  function_name = "exercise-tracker-friend"
+  handler       = "index.handler"
+
+  memory_size = "256"
+  timeout     = "5"
+  runtime     = "nodejs22.x"
+  role        = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/cloudfront-kill-switch-role"
+
+  filename         = "friend.zip"
+  source_code_hash = filebase64sha256("friend.zip")
+
+  environment {
+    variables = {
+      COGNITO_POOL_ID = aws_cognito_user_pool.user_pool.id
+    }
+  }
+
+  # tracing_config {
+  #   mode = "Active"
+  # }
+
+  # vpc_config {
+  #   security_group_ids = []
+  #   subnet_ids = []
+  # }
+}
