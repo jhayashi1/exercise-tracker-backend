@@ -11,7 +11,7 @@ const router: Router = {
     'GET /session/list'    : ListSessionsRouteController,
     'GET /session/overview': GetSessionsOverviewRouteController,
     'POST /session/start'  : StartSessionRouteController,
-    'POST /session/end'    : StopSessionRouteController,
+    'POST /session/stop'   : StopSessionRouteController,
 };
 
 export const handler = apiGatewayHandler({router});

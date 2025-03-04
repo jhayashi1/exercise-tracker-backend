@@ -83,10 +83,10 @@ resource "aws_apigatewayv2_route" "session_start" {
   target             = "integrations/${aws_apigatewayv2_integration.session.id}"
 }
 
-resource "aws_apigatewayv2_route" "session_end" {
+resource "aws_apigatewayv2_route" "session_stop" {
   api_id             = aws_apigatewayv2_api.api.id
   authorization_type = "JWT"
   authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
-  route_key          = "POST /session/end"
+  route_key          = "POST /session/stop"
   target             = "integrations/${aws_apigatewayv2_integration.session.id}"
 }
