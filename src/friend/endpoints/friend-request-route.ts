@@ -2,10 +2,10 @@ import type {APIGatewayProxyEventV2WithJWTAuthorizer, Context} from 'aws-lambda'
 import {putDynamoDb} from '../../shared/dynamo';
 import {getUserDetailsFromEvent, parseEventBody} from '../../shared/utils';
 import {getUserByUsername} from '../../shared/list-cognito-users';
-import {notFound} from '@hapi/boom';
+import {conflict, notFound} from '@hapi/boom';
 import type {FriendRequestBody, FriendRequestResp} from './friend-request-route-controller';
 import {generateGuid} from '../../shared/generate-guid';
-import {FriendRequestStatus} from '../../shared/ddb-friends';
+import {checkPendingRequests, FriendRequestStatus, getFriend} from '../../shared/ddb-friends';
 
 export const friendRequestRoute = async (event: APIGatewayProxyEventV2WithJWTAuthorizer, _context: Context): Promise<FriendRequestResp> => {
     const {username} = getUserDetailsFromEvent(event);
@@ -13,8 +13,16 @@ export const friendRequestRoute = async (event: APIGatewayProxyEventV2WithJWTAut
     const createdTimestamp = new Date().toISOString();
     const guid = generateGuid();
 
-    if (!friendUsername || !getUserByUsername(friendUsername)) {
+    if (!friendUsername || !(await getUserByUsername(friendUsername))) {
         throw notFound(`user with username ${friendUsername} could not be found`);
+    }
+
+    if (await getFriend(username, friendUsername)) {
+        throw conflict(`${username} is already friends with ${friendUsername}`);
+    }
+
+    if (await checkPendingRequests(username, friendUsername)) {
+        throw conflict(`there is an existing friend request for ${username} and ${friendUsername}`);
     }
 
     const friendRequestMetadata = {
@@ -26,7 +34,7 @@ export const friendRequestRoute = async (event: APIGatewayProxyEventV2WithJWTAut
     };
 
     const params = {
-        TableName: 'exercise-tracker-sessions',
+        TableName: 'exercise-tracker-friend-requests',
         Item     : friendRequestMetadata,
     };
 

@@ -21,6 +21,21 @@ export interface FriendRequestMetadata {
     updatedTimestamp?: string;
 }
 
+export const getFriend = async (username: string, friendUsername: string): Promise<string> => {
+    const params = {
+        TableName                : 'exercise-tracker-friends',
+        KeyConditionExpression   : 'username = :username AND friendUsername = :friendUsername',
+        ExpressionAttributeValues: {
+            ':username'      : username,
+            ':friendUsername': friendUsername,
+        },
+    };
+
+    const result = await queryDynamoDb(params);
+
+    return result.Items?.[0]?.friendUsername ?? '';
+};
+
 export const getFriends = async (username: string): Promise<string[]> => {
     const params = {
         TableName                : 'exercise-tracker-friends',
@@ -39,13 +54,40 @@ export const getFriendRequests = async (friendUsername: string): Promise<FriendR
     const params = {
         TableName                : 'exercise-tracker-friend-requests',
         IndexName                : 'friend-username-index',
-        KeyConditionExpression   : 'friend_username = :friend_username',
+        KeyConditionExpression   : 'friendUsername = :friendUsername',
         ExpressionAttributeValues: {
-            ':friend_username': friendUsername,
+            ':friendUsername': friendUsername,
         },
     };
 
     const result = await queryDynamoDb(params);
 
     return result.Items as unknown as FriendRequestMetadata[] ?? [];
+};
+
+export const checkPendingRequests = async (username: string, friendUsername: string): Promise<boolean> => {
+    const params1 = {
+        TableName                : 'exercise-tracker-friend-requests',
+        IndexName                : 'friend-username-index',
+        KeyConditionExpression   : 'username = :username AND friendUsername = :friendUsername',
+        ExpressionAttributeValues: {
+            ':friendUsername': friendUsername,
+            ':username'      : username,
+        },
+    };
+
+    const params2 = {
+        ...params1,
+        ExpressionAttributeValues: {
+            ':friendUsername': username,
+            ':username'      : friendUsername,
+        },
+    };
+
+    const result1 = await queryDynamoDb(params1);
+    const result2 = await queryDynamoDb(params2);
+
+    const allResults = [...(result1.Items ?? []), ...(result2.Items ?? [])];
+
+    return Boolean(allResults.filter((request) => request.status === 'pending').length);
 };
