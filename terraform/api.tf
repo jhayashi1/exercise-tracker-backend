@@ -110,3 +110,11 @@ resource "aws_apigatewayv2_route" "friend_request" {
   route_key          = "POST /friend/request"
   target             = "integrations/${aws_apigatewayv2_integration.friend.id}"
 }
+
+resource "aws_apigatewayv2_route" "friend_request_action" {
+  api_id             = aws_apigatewayv2_api.api.id
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
+  route_key          = "POST /friend/request-action"
+  target             = "integrations/${aws_apigatewayv2_integration.friend.id}"
+}

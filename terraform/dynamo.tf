@@ -79,4 +79,10 @@ resource "aws_dynamodb_table" "friend_requests" {
     range_key       = "username"
     projection_type = "ALL"
   }
+
+  global_secondary_index {
+    name            = "guid-index"
+    hash_key        = "guid"
+    projection_type = "ALL"
+  }
 }

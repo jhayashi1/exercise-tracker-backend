@@ -50,19 +50,19 @@ export const getFriends = async (username: string): Promise<string[]> => {
     return result.Items?.map((friend) => friend.friendUsername) ?? [];
 };
 
-export const getFriendRequests = async (friendUsername: string): Promise<FriendRequestMetadata[]> => {
+export const getFriendRequest = async (guid: string): Promise<FriendRequestMetadata> => {
     const params = {
         TableName                : 'exercise-tracker-friend-requests',
-        IndexName                : 'friend-username-index',
-        KeyConditionExpression   : 'friendUsername = :friendUsername',
+        IndexName                : 'guid-index',
+        KeyConditionExpression   : 'guid = :guid',
         ExpressionAttributeValues: {
-            ':friendUsername': friendUsername,
+            ':guid': guid,
         },
     };
 
     const result = await queryDynamoDb(params);
 
-    return result.Items as unknown as FriendRequestMetadata[] ?? [];
+    return result.Items[0] as unknown as FriendRequestMetadata ?? {};
 };
 
 export const checkPendingRequests = async (username: string, friendUsername: string): Promise<boolean> => {
