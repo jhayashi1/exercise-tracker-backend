@@ -1,4 +1,4 @@
-import {queryDynamoDb} from './dynamo';
+import {deleteDynamoDb, queryDynamoDb} from './dynamo';
 
 export interface FriendMetadata {
     username: string;
@@ -90,4 +90,25 @@ export const checkPendingRequests = async (username: string, friendUsername: str
     const allResults = [...(result1.Items ?? []), ...(result2.Items ?? [])];
 
     return Boolean(allResults.filter((request) => request.status === 'pending').length);
+};
+
+export const removeFriend = async (username: string, friendUsername: string): Promise<void> => {
+    const params1 = {
+        TableName: 'exercise-tracker-friends',
+        Key      : {
+            username      : username,
+            friendUsername: friendUsername,
+        },
+    };
+
+    const params2 = {
+        TableName: 'exercise-tracker-friends',
+        Key      : {
+            username      : friendUsername,
+            friendUsername: username,
+        },
+    };
+
+    await deleteDynamoDb(params1);
+    await deleteDynamoDb(params2);
 };
