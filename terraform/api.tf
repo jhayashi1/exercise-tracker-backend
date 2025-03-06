@@ -119,7 +119,7 @@ resource "aws_apigatewayv2_route" "friend_request_action" {
   target             = "integrations/${aws_apigatewayv2_integration.friend.id}"
 }
 
-resource "aws_apigatewayv2_route" "friend_request_action" {
+resource "aws_apigatewayv2_route" "friend_remove" {
   api_id             = aws_apigatewayv2_api.api.id
   authorization_type = "JWT"
   authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
