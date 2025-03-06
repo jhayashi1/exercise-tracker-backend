@@ -103,6 +103,14 @@ resource "aws_apigatewayv2_integration" "friend" {
   payload_format_version = "2.0"
 }
 
+resource "aws_apigatewayv2_route" "list_friends" {
+  api_id             = aws_apigatewayv2_api.api.id
+  authorization_type = "JWT"
+  authorizer_id      = aws_apigatewayv2_authorizer.authorizer.id
+  route_key          = "GET /friend/list"
+  target             = "integrations/${aws_apigatewayv2_integration.friend.id}"
+}
+
 resource "aws_apigatewayv2_route" "friend_request" {
   api_id             = aws_apigatewayv2_api.api.id
   authorization_type = "JWT"
