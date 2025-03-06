@@ -1,6 +1,5 @@
 import type {APIGatewayProxyEventV2WithJWTAuthorizer, Context} from 'aws-lambda';
 import Joi from 'joi';
-import type {FriendRequestMetadata} from '../../shared/ddb-friends';
 import {parseEventBody} from '../../shared/utils';
 import {friendRemoveRoute} from './friend-remove-route';
 
