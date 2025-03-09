@@ -62,7 +62,7 @@ export const getFriendRequest = async (guid: string): Promise<FriendRequestMetad
 
     const result = await queryDynamoDb(params);
 
-    return result.Items[0] as unknown as FriendRequestMetadata ?? {};
+    return result.Items?.[0] as unknown as FriendRequestMetadata ?? {};
 };
 
 export const checkPendingRequests = async (username: string, friendUsername: string): Promise<boolean> => {
@@ -90,6 +90,20 @@ export const checkPendingRequests = async (username: string, friendUsername: str
     const allResults = [...(result1.Items ?? []), ...(result2.Items ?? [])];
 
     return Boolean(allResults.filter((request) => request.status === 'pending').length);
+};
+
+export const getPendingRequests = async (username: string): Promise<FriendRequestMetadata[]> => {
+    const params = {
+        TableName                : 'exercise-tracker-friend-requests',
+        KeyConditionExpression   : 'friendUsername = :friendUsername',
+        ExpressionAttributeValues: {
+            ':friendUsername': username,
+        },
+    };
+
+    const result = await queryDynamoDb(params);
+
+    return result.Items as unknown as FriendRequestMetadata[] ?? [];
 };
 
 export const removeFriend = async (username: string, friendUsername: string): Promise<void> => {

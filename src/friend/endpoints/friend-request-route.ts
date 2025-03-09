@@ -5,7 +5,7 @@ import {getUserByUsername} from '../../shared/list-cognito-users';
 import {conflict, notFound} from '@hapi/boom';
 import type {FriendRequestBody, FriendRequestResp} from './friend-request-route-controller';
 import {generateGuid} from '../../shared/generate-guid';
-import {checkPendingRequests, FriendRequestStatus, getFriend} from '../../shared/ddb-friends';
+import {FriendRequestStatus, getFriend, checkPendingRequests} from '../../shared/ddb-friends';
 
 export const friendRequestRoute = async (event: APIGatewayProxyEventV2WithJWTAuthorizer, _context: Context): Promise<FriendRequestResp> => {
     const {username} = getUserDetailsFromEvent(event);
