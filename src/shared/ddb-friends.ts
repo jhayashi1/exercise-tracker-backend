@@ -96,8 +96,13 @@ export const getPendingRequests = async (username: string): Promise<FriendReques
     const params = {
         TableName                : 'exercise-tracker-friend-requests',
         KeyConditionExpression   : 'friendUsername = :friendUsername',
+        FilterExpression         : '#status = :status',
         ExpressionAttributeValues: {
             ':friendUsername': username,
+            ':status'        : FriendRequestStatus.PENDING,
+        },
+        ExpressionAttributeNames: {
+            '#status': 'status',
         },
     };
 
