@@ -2,7 +2,7 @@ import type {APIGatewayProxyEventV2WithJWTAuthorizer, Context} from 'aws-lambda'
 import {putDynamoDb} from '../../shared/dynamo';
 import {getUserDetailsFromEvent, parseEventBody} from '../../shared/utils';
 import {getUserByUsername} from '../../shared/list-cognito-users';
-import {conflict, notFound} from '@hapi/boom';
+import {badRequest, conflict, notFound} from '@hapi/boom';
 import type {FriendRequestBody, FriendRequestResp} from './friend-request-route-controller';
 import {generateGuid} from '../../shared/generate-guid';
 import {FriendRequestStatus, getFriend, checkPendingRequests} from '../../shared/ddb-friends';
@@ -12,6 +12,10 @@ export const friendRequestRoute = async (event: APIGatewayProxyEventV2WithJWTAut
     const {friendUsername} = parseEventBody<FriendRequestBody>(event);
     const createdTimestamp = new Date().toISOString();
     const guid = generateGuid();
+
+    if (username === friendUsername) {
+        throw badRequest('cannot befriend yourself!');
+    }
 
     if (!friendUsername || !(await getUserByUsername(friendUsername))) {
         throw notFound(`user with username ${friendUsername} could not be found`);
